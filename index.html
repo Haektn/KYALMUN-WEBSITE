@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KYALMUN'26</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Lato:wght@400;700&family=Montserrat:wght@500;600&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Lato', sans-serif;
+  color: #f5f5f5;
+  background: #0f0f0f;
+  padding-top: 80px;
+  overflow-x: hidden;
+}
+a {
+  position: relative;
+  color: inherit;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -3px;
+  width: 0%;
+  height: 2px;
+  background-color: #bb9452;
+  transition: width 0.3s ease, opacity 0.3s ease;
+  opacity: 0.7;
+}
+a:hover::after {
+  width: 100%;
+  opacity: 1;
+}
+a:hover {
+  color: #bb9452;
+  text-shadow: 0 0 6px rgba(192,166,122,0.5);
+}
+
+header {
+  position: fixed;
+  top: 0; left: 0; width: 100%;
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 1.25rem 2rem;
+  background-color: rgba(17,17,17,0.95);
+  border-bottom: 1px solid #222;
+  z-index: 2000;
+  backdrop-filter: blur(8px);
+  animation: fadeDown 1s ease;
+}
+header .logo {
+  display: flex; align-items: center; gap: 0.75rem;
+  cursor: pointer;
+}
+header .logo img { width: 48px; height: 48px; }
+header .logo span {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1.5rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  color: #bb9452;
+}
+nav { display: flex; gap: 1rem; }
+nav a {
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  font-family: 'Montserrat', sans-serif;
+}
+nav a:hover { background: rgba(255,255,255,0.05); color: #fff; }
+
+.popupmenu {
+  display: none;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 28px; height: 22px;
+  cursor: pointer;
+}
+.popupmenu div {
+  height: 3.5px;
+  border-radius: 2px;
+  background-color: #bb9452;
+  transition: all 0.5s ease;
+}
+.popupmenu.active div:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
+.popupmenu.active div:nth-child(2) { opacity: 0; }
+.popupmenu.active div:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
+
+.mainmenu {
+  position: relative;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 2rem;
+  width: 100%;
+  padding: 6rem 2rem;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  flex-wrap: wrap;
+  overflow: hidden;
+}
+
+.mainmenu::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 50%, #0f0f0f 100%);
+  z-index: 0;
+}
+
+.mainmenu::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.734); /* dimming overlay */
+  z-index: 0;
+}
+
+.mainmenu .hero-content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+h1, h2, h3 {
+  font-family: 'Playfair Display', serif;
+}
+
+.mainmenu .hero-content h1 {
+  font-size: 3rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 0.5rem;
+  animation: fadeIn 2s ease;
+  letter-spacing: 0.05em;
+}
+.mainmenu .hero-content h2 {
+  font-size: 1rem;
+  letter-spacing: 0.3em;
+  color: #ccc;
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+}
+.mainmenu .hero-content p { 
+  font-size: 1.125rem; 
+  color: #ddd; 
+  margin-bottom: 1.5rem;
+  animation: fadeIn 2.2s ease; 
+}
+.mainmenu .hero-content .apply-btn {
+  margin-top: 1rem;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 9999px;
+  background: #bb9452;
+  color: #111;
+  font-size: 1.125rem;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.3s ease;
+}
+.mainmenu .hero-content .apply-btn:hover {
+  background: #fff9c0; 
+  color: #111;
+  transform: scale(1.05);
+  box-shadow: none;
+}
+
+.countdown {
+  margin-top: 2rem;
+  background: #1a1a1a;
+  padding: 1.5rem;
+  border-radius: 1rem;
+  text-align: center;
+  animation: fadeIn 2.5s ease;
+}
+.countdown h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.25rem;
+  color: #bb9452;
+  margin-bottom: 1rem;
+}
+.countdown .timer {
+  display: flex; gap: 1.5rem; justify-content: center; flex-wrap: wrap;
+  font-size: 1rem;
+}
+.countdown .timer div {
+  background: rgba(255,255,255,0.05);
+  padding: 1rem 1.5rem;
+  border-radius: 12px;
+}
+.countdown .timer div span {
+  display: block;
+  font-size: 2rem;
+  font-weight: 600;
+  color: #fff;
+  font-family: 'Montserrat', sans-serif;
+  text-shadow: 0 0 8px rgba(192,166,122,0.4);
+  animation: glowPulse 2.5s ease-in-out infinite;
+}
+
+.card {
+  max-width: 65%;
+  margin: 3.5rem auto;
+  padding: 2rem;
+  border-radius: 1.5rem 1.5rem 1rem 1rem;
+  background: rgba(20,20,20,0.85);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.4);
+  font-family: 'Lato', sans-serif;
+  color: #ddd;
+  text-align: left;
+  animation: fadeUp 1.5s ease;
+}
+
+.card p {
+  margin: 1rem 0;     
+  line-height: 1.5; 
+}
+
+.card h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 1.25rem;
+}
+.card .signature {
+  margin-top: 1.5rem;
+  font-style: italic;
+  color: #bb9452;
+}
+
+footer {
+  background: #0f0f0f;
+  padding: 4rem 1rem 2rem;
+  color: #ccc;
+  position: relative;
+  border-top: 1px solid #2a2a2a;
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 0.8s ease;
+}
+footer.visible { opacity: 1; transform: translateY(0); }
+footer .footer-container {
+  max-width: 1000px;
+  margin: 0 auto;
+  display: flex; flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 2rem;
+  text-align: left;
+}
+footer h3 {
+  font-family: 'Playfair Display', serif;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  color: #fff;
+}
+footer a {
+  font-family: 'Montserrat', sans-serif;
+  color: #bb9452;
+  display: block;
+  margin: 0.5rem 0;
+  transition: all 0.3s ease;
+}
+footer a:hover { color: #fff; }
+footer p.copy {
+  margin-top: 3rem;
+  text-align: center;
+  font-size: 0.9rem;
+  color: #777;
+}
+
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes fadeUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes fadeDown { from { opacity: 0; transform: translateY(-30px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes glowPulse {
+  0%, 100% { text-shadow: 0 0 6px rgba(192,166,122,0.3); }
+  50% { text-shadow: 0 0 16px rgba(192,166,122,0.7); }
+}
+
+@media (max-width: 768px) {
+  .popupmenu { display: flex; }
+
+  nav {
+    flex-direction: column;
+    position: absolute;
+    top: 100%; left: 0; width: 100%;
+    background: #111;
+    overflow: hidden;
+    max-height: 0;
+    opacity: 0;
+    transform: translateY(-20px);
+    transition: max-height 0.5s ease, opacity 0.5s ease, transform 0.5s ease;
+    border-bottom-left-radius: 1rem;
+    border-bottom-right-radius: 1rem;
+    z-index: 2001;
+  }
+  nav.show {
+    max-height: 500px;
+    opacity: 1;
+    transform: translateY(0);
+  }
+  nav a { 
+    padding: 1rem 0; 
+    text-align: center; 
+    font-size: 1.1rem;
+  }
+
+  .mainmenu { 
+    padding: 4rem 1rem; 
+  }
+  .mainmenu .hero-content h1 { font-size: 2.2rem; }
+  .mainmenu .hero-content p { font-size: 1rem; }
+
+  .countdown .timer div span { font-size: 1.5rem; }
+
+  .card { 
+    max-width: 95%; 
+    border-radius: 1rem; 
+    padding: 1.5rem; 
+    text-align: center;
+  }
+  .card h2 { font-size: 1.5rem; }
+  .card p { font-size: 1rem; }
+
+  footer .footer-container { 
+    flex-direction: column; 
+    text-align: center; 
+    gap: 1.5rem; 
+  }
+
+  #menu-overlay {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.6);
+    z-index: 1500;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+  }
+  #menu-overlay.active {
+    display: block;
+    opacity: 1;
+  }
+}
+</style>
+</head>
+<body>
+
+<div id="menu-overlay" onclick="toggleMenu()"></div>
+
+<header>
+  <div class="logo">
+    <img src="./kyallogo.png" alt="logo">
+    <span>KYALMUN'26</span>
+  </div>
+  <div class="popupmenu" onclick="toggleMenu()">
+    <div></div><div></div><div></div>
+  </div>
+  <nav id="navbar">
+    <a href="index.html">Home</a>
+    <a href="committees.html">Committees</a>
+    <a href="apply.html">Apply Now</a>
+  </nav>
+</header>
+
+<section class="mainmenu">
+  <div class="hero-content">
+    <h2>KYALMUN'26</h2>
+    <h1>26 - 28 January 2026</h1>
+    <button class="apply-btn" onclick="window.location.href='apply.html'">Apply Now</button>
+    <div class="countdown">
+      <h2>Countdown</h2>
+      <div class="timer">
+        <div><span id="days">0</span>Days</div>
+        <div><span id="hours">0</span>Hours</div>
+        <div><span id="minutes">0</span>Min</div>
+        <div><span id="seconds">0</span>Sec</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="card">
+  <h2>Letter from the Secretary General</h2>
+  <p>Distinguished Delegates of KYALMUN'26,</p>
+  <p>As the Secretary-General of KYALMUN’26, and on behalf of our entire KYALMUN family, it is a true honor to welcome you all to the first-ever KYALMUN conference. My name is Yağmur Sarıtaş, and seeing this conference come to life—something that once existed only as a dream—means more to me than words can express.
+KYALMUN was built with excitement, stress, laughter, and countless moments of hope. Every meeting, every decision, every late-night plan was shaped not just with effort, but with genuine passion. Our teams worked with their whole hearts to create a conference that you won’t just attend, but remember.</p>
+  <p>This year, you will explore a wide range of global issues through our General Assembly committees, DISEC and Legal, dive into deeper discussions in UN Women, NATO, and H-UNSC, and challenge yourselves in our crisis committees, JCC and The Cabinet of Khaled ibn al-Walid. Each committee was carefully and lovingly crafted to inspire you, motivate you, and push you to grow.</p>
+  <p>Welcome to KYALMUN’26 — may these three days be filled with learning, inspiration, and memories that stay with you long after the conference ends. We are beyond grateful to have you as part of our first chapter.</p>
+  <p class="signature">Warm regards,<br>Yağmur Sarıtaş<br>Secretary General of KYALMUN'26</p>
+</div>
+
+<footer id="footer">
+  <div class="footer-container">
+    <div>
+      <h3>Quick Links</h3>
+      <a href="index.html">Home</a>
+      <a href="committees.html">Committees</a>
+      <a href="apply.html">Apply Now</a>
+    </div>
+    <div>
+      <h3>Contact</h3>
+      <p>Email: <a href="mailto:kyal.mun26pr@gmail.com">kyal.mun26pr@gmail.com</a></p>
+      <p>Instagram: <a href="https://instagram.com/kyal_mun26" target="_blank">@kyal_mun26</a></p>
+    </div>
+  </div>
+  <p class="copy">KYALMUN'26 © 2026. All Rights Reserved.</p>
+</footer>
+
+<script>
+function toggleMenu() {
+  const navbar = document.getElementById('navbar');
+  const menuBtn = document.querySelector('.popupmenu');
+  const overlay = document.getElementById('menu-overlay');
+  navbar.classList.toggle('show');
+  menuBtn.classList.toggle('active');
+  overlay.classList.toggle('active');
+}
+
+window.onload = function() {
+  const targetDate = new Date(2026,0,26,0,0,0).getTime();
+  function updateCountdown() {
+    const now = new Date().getTime();
+    const diff = targetDate - now;
+    if(diff <= 0){
+      document.getElementById('days').innerText = 0;
+      document.getElementById('hours').innerText = 0;
+      document.getElementById('minutes').innerText = 0;
+      document.getElementById('seconds').innerText = 0;
+      return;
+    }
+    function formatTime(num){ return num<10?'0'+num:num; }
+    document.getElementById('days').innerText = Math.floor(diff/(1000*60*60*24));
+    document.getElementById('hours').innerText = formatTime(Math.floor((diff/(1000*60*60))%24));
+    document.getElementById('minutes').innerText = formatTime(Math.floor((diff/(1000*60))%60));
+    document.getElementById('seconds').innerText = formatTime(Math.floor((diff/1000)%60));
+  }
+  setInterval(updateCountdown, 1000);
+  updateCountdown();
+
+  const footer = document.getElementById('footer');
+  function revealFooter() {
+    const rect = footer.getBoundingClientRect();
+    if(rect.top < window.innerHeight - 50) {
+      footer.classList.add('visible');
+      window.removeEventListener('scroll', revealFooter);
+    }
+  }
+  window.addEventListener('scroll', revealFooter);
+  revealFooter();
+};
+</script>
+</body>
+</html>

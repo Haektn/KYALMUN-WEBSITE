@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Committees - KYALMUN'26</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Lato:wght@400;700&family=Montserrat:wght@500;600&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Lato', sans-serif;
+  color: #f5f5f5;
+  background: #0f0f0f;
+  padding-top: 80px;
+  overflow-x: hidden;
+}
+a {
+  position: relative;
+  color: inherit;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -3px;
+  width: 0%;
+  height: 2px;
+  background-color: #bb9452;
+  transition: width 0.3s ease, opacity 0.3s ease;
+  opacity: 0.7;
+}
+a:hover::after {
+  width: 100%;
+  opacity: 1;
+}
+a:hover {
+  color: #bb9452;
+  text-shadow: 0 0 6px rgba(192,166,122,0.5);
+}
+
+header {
+  position: fixed;
+  top: 0; left: 0; width: 100%;
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 1.25rem 2rem;
+  background-color: rgba(17,17,17,0.95);
+  border-bottom: 1px solid #222;
+  z-index: 2000;
+  backdrop-filter: blur(8px);
+  animation: fadeDown 1s ease;
+}
+header .logo {
+  display: flex; align-items: center; gap: 0.75rem;
+  cursor: pointer;
+}
+header .logo img { width: 48px; height: 48px; }
+header .logo span {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1.5rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  color: #bb9452;
+}
+nav { display: flex; gap: 1rem; }
+nav a {
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  font-family: 'Montserrat', sans-serif;
+}
+nav a:hover { background: rgba(255,255,255,0.05); color: #fff; }
+
+.hamburger {
+  display: none;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 28px; height: 22px;
+  cursor: pointer;
+  z-index: 3000;
+}
+.hamburger div {
+  height: 3.5px;
+  border-radius: 2px;
+  background-color: #bb9452;
+  transition: all 0.5s ease;
+}
+.hamburger.active div:nth-child(1) { transform: rotate(45deg) translate(5px,5px); }
+.hamburger.active div:nth-child(2) { opacity: 0; }
+.hamburger.active div:nth-child(3) { transform: rotate(-45deg) translate(5px,-5px); }
+
+.page-title {
+  text-align: center;
+  margin-top: 120px;
+  font-family: 'Playfair Display', serif;
+  font-size: 3rem;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: 0.05em;
+}
+
+.committee-container {
+  display: flex; flex-wrap: wrap; justify-content: center; gap: 2rem;
+  padding: 2rem; margin-top: 2rem;
+}
+.committee-box {
+  width: 200px; aspect-ratio: 1080/1080;
+  border-radius: 1.25rem; overflow: hidden;
+  position: relative; cursor: pointer;
+  background-size: cover; background-position: center;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.4);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.committee-box::before {
+  content: ""; position: absolute; inset: 0;
+  background: rgba(0,0,0,0.35); transition: all 0.3s ease;
+}
+.committee-box:hover::before { background: rgba(0,0,0,0.55); }
+.committee-box:hover { transform: scale(1.05); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+.committee-box span {
+  position: absolute; bottom: 0; width: 100%;
+  text-align: center; background: rgba(0,0,0,0.45);
+  color: #fff; font-family: 'Montserrat', sans-serif;
+  font-weight: 600; font-size: 1.1rem; padding: 0.5rem 0;
+}
+
+.overlay {
+  position: fixed; inset: 0; display: none;
+  justify-content: center; align-items: center;
+  background: rgba(0,0,0,0.7); z-index: 4000;
+}
+.overlay-content {
+  width: 90%; max-width: 850px;
+  background: rgba(20,20,20,0.9);
+  border-radius: 1rem;
+  backdrop-filter: blur(12px);
+  padding: 2.5rem;
+  color: #ddd;
+  position: relative;
+  transform: translateY(20px) scale(0.9);
+  opacity: 0;
+  transition: all 0.4s ease;
+}
+.overlay.show .overlay-content {
+  transform: translateY(0) scale(1); opacity: 1;
+}
+.close-btn {
+  position: absolute; top: 1rem; right: 1rem;
+  font-size: 1.8rem; color: #bb9452; cursor: pointer;
+  transition: color 0.3s;
+}
+.close-btn:hover { color: #fff; }
+.overlay-content h2 {
+  font-family: 'Playfair Display', serif; font-size: 2rem; font-weight: 700;
+  margin-bottom: 0.5rem; color: #fff;
+}
+.overlay-content h3, .overlay-content h4, .overlay-content h5 {
+  font-family: 'Montserrat', sans-serif;
+  color: #bb9452;
+}
+.overlay-content h3 { font-size: 1.3rem; margin-bottom: 1rem; }
+.overlay-content h4, .overlay-content h5 { font-size: 1.1rem; margin-bottom: 0.4rem; }
+.overlay-content p { line-height: 1.6; font-size: 1rem; color: #ddd; margin-bottom: 0.6rem;}
+.overlay-content button {
+  margin-top: 1rem; padding: 0.6rem 1.2rem;
+  border: none; border-radius: 9999px;
+  background: #bb9452; color: #111;
+  font-family: 'Montserrat', sans-serif; font-weight: 600;
+  cursor: pointer; transition: all 0.3s ease;
+}
+.overlay-content button:hover { background: #fff9c0; transform: scale(1.05); }
+
+footer {
+  background: #0f0f0f;
+  padding: 4rem 1rem 2rem;
+  color: #ccc;
+  position: relative;
+  border-top: 1px solid #2a2a2a;
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 0.8s ease;
+}
+footer.visible { opacity: 1; transform: translateY(0); }
+footer .footer-container {
+  max-width: 1000px;
+  margin: 0 auto;
+  display: flex; flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 2rem;
+  text-align: left;
+}
+footer h3 { font-family: 'Playfair Display', serif; font-weight: 700; margin-bottom: 1rem; color: #fff; }
+footer a { font-family: 'Montserrat', sans-serif; color: #bb9452; display: block; margin: 0.5rem 0; transition: all 0.3s ease; }
+footer a:hover { color: #fff; }
+footer p.copy { margin-top: 3rem; text-align: center; font-size: 0.9rem; color: #777; }
+
+@keyframes fadeDown { from { opacity: 0; transform: translateY(-30px); } to { opacity: 1; transform: translateY(0); } }
+
+@media (max-width: 768px) {
+  .hamburger { display: flex; }
+  nav {
+    flex-direction: column;
+    position: absolute; top: 100%; left: 0; width: 100%;
+    background: #111;
+    overflow: hidden;
+    max-height: 0;
+    opacity: 0;
+    transform: translateY(-20px);
+    transition: all 0.5s ease;
+    border-bottom-left-radius: 1rem;
+    border-bottom-right-radius: 1rem;
+    z-index: 2001;
+  }
+  nav.show { max-height: 500px; opacity: 1; transform: translateY(0); }
+  nav a { padding: 1rem 0; font-size: 1.1rem; }
+  footer .footer-container { flex-direction: column; text-align: center; gap: 1.5rem; }
+  .page-title { font-size: 2.4rem; margin-top: 100px; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <img src="./kyallogo.png" alt="KYALMUN Logo">
+    <span>KYALMUN'26</span>
+  </div>
+  <div class="hamburger" onclick="toggleMenu()"><div></div><div></div><div></div></div>
+  <nav id="navbar">
+    <a href="index.html">Home</a>
+    <a href="committees.html">Committees</a>
+    <a href="apply.html">Apply Now</a>
+  </nav>
+</header>
+
+<h1 class="page-title">Committees</h1>
+
+<div class="committee-container">
+  <div class="committee-box" style="background:url('committees/DISEC.jpg') center/cover no-repeat;" onclick="openOverlay('sochum')"><span>GA:1 DISEC</span></div>
+  <div class="committee-box" style="background:url('committees/LEGAL.jpg') center/cover no-repeat;" onclick="openOverlay('legal')"><span>GA:6 LEGAL</span></div>
+  <div class="committee-box" style="background:url('committees/UNBAYAN.jpg') center/cover no-repeat;" onclick="openOverlay('unscei')"><span>UN Women</span></div>
+  <div class="committee-box" style="background:url('committees/NATO.jpg') center/cover no-repeat;" onclick="openOverlay('imf')"><span>NATO</span></div>
+  <div class="committee-box" style="background:url('committees/UNSC.jpg') center/cover no-repeat;" onclick="openOverlay('common')"><span>H-UNSC</span></div>
+  <div class="committee-box" style="background:url('committees/CABINET.jpg') center/cover no-repeat;" onclick="openOverlay('sky')"><span>CABINET</span></div>
+  <div class="committee-box" style="background:url('committees/JCC.jpg') center/cover no-repeat;" onclick="openOverlay('fjcc')"><span>JCC</span></div>
+</div>
+
+<div class="overlay" id="overlay">
+  <div class="overlay-content">
+    <span class="close-btn" onclick="closeOverlay()">×</span>
+    <h2 id="overlay-title">Committee Title</h2>
+    <h3 id="overlay-subtitle">Agenda Item</h3>
+    <h4 id="overlay-usg">Under Secretary General</h4>
+    <h4 id="overlay-acas">Academic Assistant</h4>
+    <h5 id="overlay-acass"></h5>
+    <button id="sg-btn" onclick="window.location.href='comingsoon.html'">Study Guide</button>
+    <button id="rop-btn" style="display:none;" onclick="window.location.href='comingsoon.html'">Rules of Procedure</button>
+  </div>
+</div>
+
+<footer id="footer">
+  <div class="footer-container">
+    <div>
+      <h3>Quick Links</h3>
+      <a href="index.html">Home</a>
+      <a href="committees.html">Committees</a>
+      <a href="apply.html">Apply Now</a>
+    </div>
+    <div>
+      <h3>Contact</h3>
+      <p>Email: <a href="mailto:kyal.mun26pr@gmail.com">kyal.mun26pr@gmail.com</a></p>
+      <p>Instagram: <a href="https://instagram.com/kyal_mun26" target="_blank">@kyal_mun26</a></p>
+    </div>
+  </div>
+  <p class="copy">KYALMUN'26 © 2026. All Rights Reserved.</p>
+</footer>
+
+<script>
+function toggleMenu() {
+  const navbar = document.getElementById('navbar');
+  const hamburger = document.querySelector('.hamburger');
+  navbar.classList.toggle('show');
+  hamburger.classList.toggle('active');
+}
+
+const footer = document.getElementById('footer');
+function revealFooter() {
+  const rect = footer.getBoundingClientRect();
+  if(rect.top < window.innerHeight - 50) {
+    footer.classList.add('visible');
+    window.removeEventListener('scroll', revealFooter);
+  }
+}
+window.addEventListener('scroll', revealFooter);
+revealFooter();
+
+function openOverlay(committee){
+  const overlay = document.getElementById('overlay');
+  overlay.style.display = 'flex';
+
+  const title = document.getElementById('overlay-title');
+  const subtitle = document.getElementById('overlay-subtitle');
+  const usg = document.getElementById('overlay-usg');
+  const acas = document.getElementById('overlay-acas');
+  const acass = document.getElementById('overlay-acass');
+  const sgBtn = document.getElementById('sg-btn');
+  const ropBtn = document.getElementById('rop-btn');
+
+  ropBtn.style.display = 'none';
+  sgBtn.onclick = () => window.location.href = 'comingsoon.html';
+  ropBtn.onclick = () => window.location.href = 'comingsoon.html';
+
+  if(committee==='sochum'){
+    title.innerText='GA:1 DISEC';
+    subtitle.innerText='Ensuring the Compliance of the Chemical Weapons Convention';
+    usg.innerText='Under Secretary General: Ela Elif Sarıkoç';
+    acas.innerText='Academic Assistant: Beste Gedikoğlu';
+    acass.innerText='';
+  } else if(committee==='legal'){
+    title.innerText='GA:6 LEGAL';
+    subtitle.innerText='The International Legal Status of Climate Refugees and Cross Border Displacement';
+    usg.innerText='Co-Under Secretary General: Haktan Efe Özgür';
+    acas.innerText='Co-Under Secretary General: Ekin Şahin';
+    acass.innerText='Academic Assistant: Eda Erdönmez';
+  } else if(committee==='unscei'){
+    title.innerText='UN Women';
+    subtitle.innerText='The Erasure of Women From Historical Memort and National Narratives';
+    usg.innerText='Under Secretary General: Asya Ateş';
+    acas.innerText='Academic Assistant: Deren Nur Oruç';
+    acass.innerText='';
+  } else if(committee==='imf'){
+    title.innerText='NATO';
+    subtitle.innerText='NATOs Role in the Arctic Amid Rising Tensions';
+    usg.innerText='Under Secretary General: Zeynep Naz Cengiz';
+    acas.innerText='';
+    acass.innerText='';
+  } else if(committee==='common'){
+    title.innerText='H-UNSC';
+    subtitle.innerText='The Iran-Iraq War (1980-1988)';
+    usg.innerText='Under Secretary General: Hamza Gezersu';
+    acas.innerText='Academic Assistant: Göktürk Uçar';
+    acass.innerText='';
+    ropBtn.style.display='none';
+  } else if(committee==='sky'){
+    title.innerText='Cabinet of Khalid ibn al-Walid';
+    subtitle.innerText='Open Agenda';
+    usg.innerText='Co-Under Secretary General: İbrahim Furkan Günler';
+    acas.innerText='Co-Under Secretary General: Arda Kılıç';
+    acass.innerText='Academic Assistant: Yahya Bedir Sancar';
+  } else if(committee==='fjcc'){
+    title.innerText='JCC: La Casa De Papel';
+    subtitle.innerText='Open Agenda';
+    usg.innerText='Under Secretary General: Eren Kazan';
+    acas.innerText='';
+    acass.innerText='';
+  }
+
+  // Animate overlay appearance
+  setTimeout(() => {
+    overlay.classList.add('show');
+  }, 10);
+}
+
+function closeOverlay() {
+  const overlay = document.getElementById('overlay');
+  overlay.classList.remove('show');
+  setTimeout(() => {
+    overlay.style.display = 'none';
+  }, 400);
+}
+</script>
+</body>
+</html>
