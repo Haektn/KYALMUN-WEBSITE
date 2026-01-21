@@ -319,24 +319,28 @@ function openOverlay(committee){
     usg.innerText='Under Secretary General: Ela Elif Sarıkoç';
     acas.innerText='Academic Assistant: Beste Gedikoğlu';
     acass.innerText='';
+    sgBtn.onclick = () => { window.location.href = 'guides/disec.pdf'; };
   } else if(committee==='legal'){
     title.innerText='GA:6 LEGAL';
     subtitle.innerText='The International Legal Status of Climate Refugees and Cross Border Displacement';
     usg.innerText='Co-Under Secretary General: Haktan Efe Özgür';
     acas.innerText='Co-Under Secretary General: Ekin Şahin';
     acass.innerText='Academic Assistant: Eda Erdönmez';
+    sgBtn.onclick = () => { window.location.href = 'guides/legal.pdf'; };
   } else if(committee==='unscei'){
     title.innerText='UN Women';
     subtitle.innerText='The Erasure of Women From Historical Memort and National Narratives';
     usg.innerText='Under Secretary General: Asya Ateş';
-    acas.innerText='Academic Assistant: Deren Nur Oruç';
+    acas.innerText='Academic Assistant: Ela Eraslan';
     acass.innerText='';
+    sgBtn.onclick = () => { window.location.href = 'guides/unwomen.pdf'; };
   } else if(committee==='imf'){
     title.innerText='NATO';
     subtitle.innerText='NATOs Role in the Arctic Amid Rising Tensions';
     usg.innerText='Under Secretary General: Zeynep Naz Cengiz';
     acas.innerText='';
     acass.innerText='';
+    sgBtn.onclick = () => { window.location.href = 'guides/nato.pdf'; };
   } else if(committee==='common'){
     title.innerText='H-UNSC';
     subtitle.innerText='The Iran-Iraq War (1980-1988)';
@@ -344,16 +348,19 @@ function openOverlay(committee){
     acas.innerText='Academic Assistant: Göktürk Uçar';
     acass.innerText='';
     ropBtn.style.display='none';
+    sgBtn.onclick = () => { window.location.href = 'guides/unsc.pdf'; };
   } else if(committee==='sky'){
     title.innerText='Cabinet of Khalid ibn al-Walid';
     subtitle.innerText='Open Agenda';
     usg.innerText='Co-Under Secretary General: İbrahim Furkan Günler';
     acas.innerText='Co-Under Secretary General: Arda Kılıç';
     acass.innerText='Academic Assistant: Yahya Bedir Sancar';
+    sgBtn.onclick = () => { window.location.href = 'guides/cabinet.pdf'; };
   } else if(committee==='fjcc'){
     title.innerText='JCC: La Casa De Papel';
     subtitle.innerText='Open Agenda';
     usg.innerText='Under Secretary General: Eren Kazan';
+    sgBtn.onclick = () => { window.location.href = 'guides/jcc.pdf'; };
     acas.innerText='';
     acass.innerText='';
   }
